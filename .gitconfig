@@ -1,0 +1,7 @@
+[core]
+	editor = vim
+[user]
+	email = fani.triastowo@gmail.com
+	name = Fani Triastowo
+[alias]
+	logg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit -n 10 --oneline
