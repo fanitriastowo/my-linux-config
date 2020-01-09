@@ -1,9 +1,10 @@
-let mapleader = "`"
+let mapleader ="`"
 
 if ! filereadable(expand('~/.config/nvim/autoload/plug.vim'))
 	echo "Downloading junegunn/vim-plug to manage plugins..."
 	silent !mkdir -p ~/.config/nvim/autoload/
 	silent !curl "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > ~/.config/nvim/autoload/plug.vim
+	autocmd VimEnter * PlugInstall
 endif
 
 call plug#begin('~/.config/nvim/plugged')
@@ -20,9 +21,12 @@ Plug 'vifm/vifm.vim'
 Plug 'kovetskiy/sxhkd-vim'
 Plug 'posva/vim-vue'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 Plug 'StanAngeloff/php.vim'
 Plug 'chaoren/vim-wordmotion'
 Plug 'mkitt/tabline.vim'
+Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'sheerun/vim-polyglot'
 call plug#end()
 
 " Some basics:
@@ -50,12 +54,14 @@ call plug#end()
     set autoindent
     set wildmenu
     nnoremap c "_c
-    nnoremap <M-w> :w! <bar> mksession! ~/.vim/Session.vim<CR>
+    nnoremap <M-W> :w! <bar> mksession! ~/.vim/Session.vim<CR>
+    nnoremap <M-w> :wall<CR>
     set clipboard+=unnamedplus
-    nnoremap <M-]> :vsplit<CR>
-    nnoremap <silent> <Leader>= :exe "vertical resize +5"<CR>
-    nnoremap <silent> <Leader>- :exe "vertical resize -5"<CR>
+    nnoremap <M-]> :split<CR>
+    nnoremap <silent> <Leader>= :exe "resize +30"<CR>
+    nnoremap <silent> <Leader>- :exe "resize -30"<CR>
     let g:NERDTreeWinSize=60
+
 
 " Tab config
 	noremap <M-1> 1gt
@@ -69,16 +75,26 @@ call plug#end()
 	noremap <M-9> 9gt
 	noremap <M-0> :tablast<cr>
 
+" Triger `autoread` when files changes on disk
+" https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
+" https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
+autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
+" Notification after file change
+" https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
+autocmd FileChangedShellPost *
+  \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
+
 " fzf plugin
 	map <M-P> :FZF<CR>
 
 " Enable autocompletion:
 	set wildmode=longest,list,full
+
 " Disables automatic commenting on newline:
 	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " Goyo plugin makes text more readable when writing prose:
-	map <M-f> :Goyo \| set bg=light \| set linebreak<CR>
+	" map <leader>f :Goyo \| set bg=light \| set linebreak<CR>
 
 " Spell-check set to <leader>o, 'o' for 'orthography':
 	" map <leader>o :setlocal spell! spelllang=en_us<CR>
@@ -91,11 +107,11 @@ call plug#end()
 	autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " vimling:
-	nm <leader>d :call ToggleDeadKeys()<CR>
-	imap <leader>d <esc>:call ToggleDeadKeys()<CR>a
-	nm <leader>i :call ToggleIPA()<CR>
-	imap <leader>i <esc>:call ToggleIPA()<CR>a
-	nm <leader>q :call ToggleProse()<CR>
+	" nm <leader>d :call ToggleDeadKeys()<CR>
+	" imap <leader>d <esc>:call ToggleDeadKeys()<CR>a
+	" nm <leader>i :call ToggleIPA()<CR>
+	" imap <leader>i <esc>:call ToggleIPA()<CR>a
+	" nm <leader>q :call ToggleProse()<CR>
 
 " Shortcutting split navigation, saving a keypress:
 	map <C-h> <C-w>h
@@ -106,21 +122,17 @@ call plug#end()
 " Check file in shellcheck:
 	" map <leader>s :!clear && shellcheck %<CR>
 
-" Open my bibliography file in split
-	" map <leader>b :vsp<space>$BIB<CR>
-	" map <leader>r :vsp<space>$REFER<CR>
-
 " Replace all is aliased to S.
 	nnoremap S :%s//g<Left><Left>
 
 " Compile document, be it groff/LaTeX/markdown/etc.
-	" map <leader>c :w! \| !compiler <c-r>%<CR>
+	map <leader>c :w! \| !compiler <c-r>%<CR>
 
 " Open corresponding .pdf/.html or preview
-	" map <leader>p :!opout <c-r>%<CR><CR>
+	map <leader>p :!opout <c-r>%<CR><CR>
 
 " Runs a script that cleans out tex build files whenever I close out of a .tex file.
-	" autocmd VimLeave *.tex !texclear %
+	autocmd VimLeave *.tex !texclear %
 
 " Ensure files are read as what I want:
 	let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
@@ -131,8 +143,8 @@ call plug#end()
 
 " Enable Goyo by default for mutt writting
 	" Goyo's width will be the line limit in mutt.
-	" autocmd BufRead,BufNewFile /tmp/neomutt* let g:goyo_width=80
-	" autocmd BufRead,BufNewFile /tmp/neomutt* :Goyo \| set bg=light
+	autocmd BufRead,BufNewFile /tmp/neomutt* let g:goyo_width=80
+	autocmd BufRead,BufNewFile /tmp/neomutt* :Goyo \| set bg=light
 
 " Automatically deletes all trailing whitespace on save.
 	autocmd BufWritePre * %s/\s\+$//e
@@ -149,6 +161,10 @@ call plug#end()
 " Navigating with guides
 	inoremap <leader><leader> <Esc>/<++><Enter>"_c4l
 	vnoremap <leader><leader> <Esc>/<++><Enter>"_c4l
+	map <leader><leader> <Esc>/<++><Enter>"_c4l
+
+" Save file as sudo on files that require root permission
+	cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
 
 """HTML
 	autocmd FileType html inoremap ,b <b></b><Space><++><Esc>FbT>i
@@ -195,6 +211,23 @@ call plug#end()
 	autocmd FileType html inoremap ò &ograve;
 	autocmd FileType html inoremap ù &ugrave;
 
-"".xml
-	 autocmd FileType xml inoremap ,e <item><Enter><title><++></title><Enter><guid<space>isPermaLink="false"><++></guid><Enter><pubDate><Esc>:put<Space>=strftime('%a, %d %b %Y %H:%M:%S %z')<Enter>kJA</pubDate><Enter><link><++></link><Enter><description><![CDATA[<++>]]></description><Enter></item><Esc>?<title><enter>cit
-	 autocmd FileType xml inoremap ,a <a href="<++>"><++></a><++><Esc>F"ci"
+"MARKDOWN
+	autocmd Filetype markdown,rmd map <leader>w yiWi[<esc>Ea](<esc>pa)
+	autocmd Filetype markdown,rmd inoremap ,n ---<Enter><Enter>
+	autocmd Filetype markdown,rmd inoremap ,b ****<++><Esc>F*hi
+	autocmd Filetype markdown,rmd inoremap ,s ~~~~<++><Esc>F~hi
+	autocmd Filetype markdown,rmd inoremap ,e **<++><Esc>F*i
+	autocmd Filetype markdown,rmd inoremap ,h ====<Space><++><Esc>F=hi
+	autocmd Filetype markdown,rmd inoremap ,i ![](<++>)<++><Esc>F[a
+	autocmd Filetype markdown,rmd inoremap ,a [](<++>)<++><Esc>F[a
+	autocmd Filetype markdown,rmd inoremap ,1 #<Space><Enter><++><Esc>kA
+	autocmd Filetype markdown,rmd inoremap ,2 ##<Space><Enter><++><Esc>kA
+	autocmd Filetype markdown,rmd inoremap ,3 ###<Space><Enter><++><Esc>kA
+	autocmd Filetype markdown,rmd inoremap ,l --------<Enter>
+	autocmd Filetype rmd inoremap ,r ```{r}<CR>```<CR><CR><esc>2kO
+	autocmd Filetype rmd inoremap ,p ```{python}<CR>```<CR><CR><esc>2kO
+	autocmd Filetype rmd inoremap ,c ```<cr>```<cr><cr><esc>2kO
+
+""".xml
+	autocmd FileType xml inoremap ,e <item><Enter><title><++></title><Enter><guid<space>isPermaLink="false"><++></guid><Enter><pubDate><Esc>:put<Space>=strftime('%a, %d %b %Y %H:%M:%S %z')<Enter>kJA</pubDate><Enter><link><++></link><Enter><description><![CDATA[<++>]]></description><Enter></item><Esc>?<title><enter>cit
+	autocmd FileType xml inoremap ,a <a href="<++>"><++></a><++><Esc>F"ci"
