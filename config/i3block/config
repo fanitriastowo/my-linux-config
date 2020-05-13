@@ -7,10 +7,10 @@ command=cat /tmp/recordingicon
 interval=once
 signal=9
 
-[music]
-label=🎼
-interval=once
-signal=11
+#[music]
+#label=🎼
+#interval=once
+#signal=11
 
 #[news]
 #label=📰
@@ -63,7 +63,7 @@ command=battery BAT0
 interval=5
 
 [clock]
-label=📅
+label=📅:
 interval=30
 
 [internet]
