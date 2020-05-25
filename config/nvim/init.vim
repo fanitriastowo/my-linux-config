@@ -26,6 +26,7 @@ Plug 'mkitt/tabline.vim'
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'sheerun/vim-polyglot'
 Plug 'morhetz/gruvbox'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
 " Some basics:
@@ -33,9 +34,6 @@ call plug#end()
     set go=a
     set mouse=a
     set nohlsearch
-
-    set colorcolumn=80
-    highlight ColorColumn ctermbg=0 guibg=lightgrey
 
     set clipboard=unnamedplus
     set clipboard+=unnamedplus
@@ -61,8 +59,11 @@ call plug#end()
     set autoindent
     set wildmenu
 
+    set colorcolumn=80
+    highlight ColorColumn ctermbg=0 guibg=lightgrey
+
     nnoremap c "_c
-    nnoremap <M-W> :w! <bar> mksession! ~/.vim/Session.vim<CR>
+    nnoremap <M-W> :w! <bar> mksession! ~/.config/nvim/Session.vim<CR>
     nnoremap <M-w> :wall<CR>
     nnoremap <M-]> :vsplit<CR>
 
@@ -90,6 +91,41 @@ call plug#end()
 	noremap <M-9> 9gt
 	noremap <M-0> :tablast<cr>
 
+" GoTo code navigation.
+    set hidden
+    " Some servers have issues with backup files, see #649.
+    set nobackup
+    set nowritebackup
+    set undodir=~/.config/nvim/undodir
+    set undofile
+    set noswapfile
+
+    " Give more space for displaying messages.
+    set cmdheight=1
+
+    " Don't pass messages to |ins-completion-menu|.
+    set shortmess+=c
+
+    function! s:check_back_space() abort
+        let col = col('.') - 1
+        return !col || getline('.')[col - 1]  =~# '\s'
+    endfunction
+
+    inoremap <silent><expr> <TAB>
+                \ pumvisible() ? "\<C-n>" :
+                \ <SID>check_back_space() ? "\<TAB>" :
+                \ coc#refresh()
+
+    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+    inoremap <silent><expr> <C-space> coc#refresh()
+
+    nmap <leader>gd <Plug>(coc-definition)
+    nmap <leader>gy <Plug>(coc-type-definition)
+    nmap <leader>gi <Plug>(coc-implementation)
+    nmap <leader>gr <Plug>(coc-references)
+    nmap <leader>rr <Plug>(coc-rename)
+    nnoremap <leader>cr :CocRestart<CR>
+
 augroup twig_ft
   au!
   autocmd BufNewFile,BufRead *.html.twig   set syntax=html
@@ -106,7 +142,7 @@ augroup END
       \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 
 " fzf plugin
-	map <M-p> :FZF<CR>
+	nnoremap <M-p> :Files<CR>
     function! s:copy_results(lines)
         let joined_lines = join(a:lines, "\n")
         if len(a:lines) > 1

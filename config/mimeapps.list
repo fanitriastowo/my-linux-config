@@ -1,0 +1,24 @@
+[Default Applications]
+x-scheme-handler/magnet=torrent.desktop;
+application/x-bittorrent=torrent.desktop;
+x-scheme-handler/mailto=mail.desktop
+text/plain=text.desktop;
+text/x-shellscript=text.desktop;
+application/postscript=pdf.desktop;
+application/pdf=pdf.desktop;
+image/png=sxiv.desktop
+image/jpeg=sxiv.desktop
+image/gif=img.desktop;
+application/rss+xml=rss.desktop
+x-scheme-handler/postman=Postman.desktop
+x-scheme-handler/webcal=google-chrome.desktop
+x-scheme-handler/discord-478576776990425110=discord-478576776990425110.desktop
+
+[Added Associations]
+inode/directory=exo-file-manager.desktop;
+x-scheme-handler/trash=exo-file-manager.desktop;
+image/png=sxiv.desktop;
+image/jpeg=viewnior.desktop;sxiv.desktop;
+x-scheme-handler/http=exo-web-browser.desktop;
+x-scheme-handler/https=exo-web-browser.desktop;
+

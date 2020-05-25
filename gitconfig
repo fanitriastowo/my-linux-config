@@ -1,5 +1,5 @@
 [core]
-	editor = vim
+	editor = nvim
 [user]
 	email = fani.triastowo@gmail.com
 	name = Fani Triastowo
