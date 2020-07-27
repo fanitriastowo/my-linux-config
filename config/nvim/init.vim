@@ -1,36 +1,30 @@
+set nocompatible
+
 let mapleader =" "
 
 if ! filereadable(expand('~/.config/nvim/autoload/plug.vim'))
 	echo "Downloading junegunn/vim-plug to manage plugins..."
 	silent !mkdir -p ~/.config/nvim/autoload/
-	silent !curl "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > ~/.config/nvim/autoload/plug.vim
+    silent !curl "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > ~/.config/nvim/autoload/plug.vim
 	autocmd VimEnter * PlugInstall
 endif
 
 call plug#begin('~/.config/nvim/plugged')
 Plug 'tpope/vim-surround'
 Plug 'scrooloose/nerdtree'
-Plug 'PotatoesMaster/i3-vim-syntax'
-Plug 'jreybert/vimagit'
 Plug 'vimwiki/vimwiki'
 Plug 'bling/vim-airline'
 Plug 'tpope/vim-commentary'
-Plug 'vifm/vifm.vim'
 Plug 'kovetskiy/sxhkd-vim'
-Plug 'posva/vim-vue'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'StanAngeloff/php.vim'
 Plug 'chaoren/vim-wordmotion'
 Plug 'mkitt/tabline.vim'
-Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'sheerun/vim-polyglot'
-Plug 'morhetz/gruvbox'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
 " Some basics:
-    set bg=light
+    set regexpengine=1
     set go=a
     set mouse=a
     set nohlsearch
@@ -38,29 +32,29 @@ call plug#end()
     set clipboard=unnamedplus
     set clipboard+=unnamedplus
 
-    set scrolloff=15
+    set scrolloff=10
     set smartindent
+    set breakindent
     set smartcase
-    set nocompatible
 
     filetype plugin on
     filetype indent on
     syntax enable
 
+    set lazyredraw
+
     set encoding=utf-8
-    set tabstop=4
+    set tabstop=2
     set softtabstop=0 expandtab
-    set shiftwidth=4
+    set shiftwidth=2
     set smarttab
-    set number relativenumber
-    set ruler
+    set number
     set ignorecase
     set autoread
     set autoindent
+    set copyindent
     set wildmenu
-
-    set colorcolumn=80
-    highlight ColorColumn ctermbg=0 guibg=lightgrey
+    set ttyfast
 
     nnoremap c "_c
     nnoremap <M-W> :w! <bar> mksession! ~/.config/nvim/Session.vim<CR>
@@ -69,15 +63,11 @@ call plug#end()
 
     nnoremap <silent> <Leader>+ :exe "vertical resize +30"<CR>
     nnoremap <silent> <Leader>- :exe "vertical resize -30"<CR>
-    let g:NERDTreeWinSize=50
+    let g:NERDTreeWinSize=70
 
     set updatetime=50
     set timeoutlen=1000
     set ttimeoutlen=0
-
-" colorscheme desertEx
-    colorscheme gruvbox
-    set background=dark
 
 " Tab config
 	noremap <M-1> 1gt
@@ -91,8 +81,9 @@ call plug#end()
 	noremap <M-9> 9gt
 	noremap <M-0> :tablast<cr>
 
-" GoTo code navigation.
     set hidden
+    set backspace=indent,eol,start " allow backspacing over everything in insert mode
+
     " Some servers have issues with backup files, see #649.
     set nobackup
     set nowritebackup
@@ -105,26 +96,6 @@ call plug#end()
 
     " Don't pass messages to |ins-completion-menu|.
     set shortmess+=c
-
-    function! s:check_back_space() abort
-        let col = col('.') - 1
-        return !col || getline('.')[col - 1]  =~# '\s'
-    endfunction
-
-    inoremap <silent><expr> <TAB>
-                \ pumvisible() ? "\<C-n>" :
-                \ <SID>check_back_space() ? "\<TAB>" :
-                \ coc#refresh()
-
-    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-    inoremap <silent><expr> <C-space> coc#refresh()
-
-    nmap <leader>gd <Plug>(coc-definition)
-    nmap <leader>gy <Plug>(coc-type-definition)
-    nmap <leader>gi <Plug>(coc-implementation)
-    nmap <leader>gr <Plug>(coc-references)
-    nmap <leader>rr <Plug>(coc-rename)
-    nnoremap <leader>cr :CocRestart<CR>
 
 augroup twig_ft
   au!
@@ -167,7 +138,8 @@ augroup END
 	set splitbelow splitright
 
 " Nerd tree
-	map <M-n> :NERDTreeToggle<CR>
+	nnoremap <M-n> :NERDTreeToggle<CR>
+	nnoremap <leader>n :NERDTreeFind<CR>
 	autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
     if has('nvim')
         let NERDTreeBookmarksFile = stdpath('data') . '/NERDTreeBookmarks'
@@ -190,11 +162,6 @@ augroup END
 	autocmd BufRead,BufNewFile /tmp/calcurse*,~/.calcurse/notes/* set filetype=markdown
 	autocmd BufRead,BufNewFile *.ms,*.me,*.mom,*.man set filetype=groff
 	autocmd BufRead,BufNewFile *.tex set filetype=tex
-
-" Enable Goyo by default for mutt writting
-	" Goyo's width will be the line limit in mutt.
-	autocmd BufRead,BufNewFile /tmp/neomutt* let g:goyo_width=80
-	autocmd BufRead,BufNewFile /tmp/neomutt* :Goyo \| set bg=light
 
 " Automatically deletes all trailing whitespace on save.
 	autocmd BufWritePre * %s/\s\+$//e
@@ -221,9 +188,4 @@ augroup END
 if &diff
     highlight! link DiffText MatchParen
 endif
-
-augroup twig_ft
-  au!
-  autocmd BufNewFile,BufRead *.testing   set syntax=markdown
-augroup END
 
