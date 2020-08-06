@@ -25,14 +25,14 @@ call plug#end()
 
 " Some basics:
     set regexpengine=1
-    set go=a
-    set mouse=a
+    set mouse=n
     set nohlsearch
 
     set clipboard=unnamedplus
     set clipboard+=unnamedplus
 
     set scrolloff=10
+    set sidescrolloff=20
     set smartindent
     set breakindent
     set smartcase
@@ -42,6 +42,7 @@ call plug#end()
     syntax enable
 
     set lazyredraw
+    let g:loaded_matchparen=1
 
     set encoding=utf-8
     set tabstop=2
@@ -69,17 +70,23 @@ call plug#end()
     set timeoutlen=1000
     set ttimeoutlen=0
 
-" Tab config
-	noremap <M-1> 1gt
-	noremap <M-2> 2gt
-	noremap <M-3> 3gt
-	noremap <M-4> 4gt
-	noremap <M-5> 5gt
-	noremap <M-6> 6gt
-	noremap <M-7> 7gt
-	noremap <M-8> 8gt
-	noremap <M-9> 9gt
-	noremap <M-0> :tablast<cr>
+    set nocursorcolumn
+    set nocursorline
+    set norelativenumber
+    syntax sync minlines=256
+    set nowrap
+
+    " Tab config
+    noremap <M-1> 1gt
+    noremap <M-2> 2gt
+    noremap <M-3> 3gt
+    noremap <M-4> 4gt
+    noremap <M-5> 5gt
+    noremap <M-6> 6gt
+    noremap <M-7> 7gt
+    noremap <M-8> 8gt
+    noremap <M-9> 9gt
+    noremap <M-0> :tablast<cr>
 
     set hidden
     set backspace=indent,eol,start " allow backspacing over everything in insert mode
@@ -97,11 +104,8 @@ call plug#end()
     " Don't pass messages to |ins-completion-menu|.
     set shortmess+=c
 
-augroup twig_ft
-  au!
-  autocmd BufNewFile,BufRead *.html.twig   set syntax=html
-augroup END
-
+" Vim surround
+" use block words `S + -- ' | " | ( | [ | { --`
 " Triger `autoread` when files changes on disk
 " https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
 " https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
@@ -113,7 +117,7 @@ augroup END
       \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 
 " fzf plugin
-	nnoremap <M-p> :Files<CR>
+	nnoremap <M-p> :GFiles<CR>
     function! s:copy_results(lines)
         let joined_lines = join(a:lines, "\n")
         if len(a:lines) > 1
@@ -138,8 +142,17 @@ augroup END
 	set splitbelow splitright
 
 " Nerd tree
-	nnoremap <M-n> :NERDTreeToggle<CR>
-	nnoremap <leader>n :NERDTreeFind<CR>
+  let g:NERDTreeWinPos = "right"
+  function MyNerdToggle()
+      if &filetype == 'nerdtree'
+          :NERDTreeToggle
+      else
+          :NERDTreeFind
+      endif
+  endfunction
+
+  " Start nvim with 'nvim .'
+  nnoremap <M-n> :call MyNerdToggle()<CR>
 	autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
     if has('nvim')
         let NERDTreeBookmarksFile = stdpath('data') . '/NERDTreeBookmarks'
