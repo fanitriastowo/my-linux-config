@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [ -f "$1" ]
+then
+  ffmpeg -i "$1" -acodec aac -ab 128k -ac 2 -vcodec libx264 \
+    -preset slow -crf 22 -threads 0 final_video.mp4
+
+else
+  echo "File doesn't exist"
+
+fi
+
