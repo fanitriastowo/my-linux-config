@@ -46,3 +46,4 @@ alias \
 	tree="tree -L 1 -F" \
 	dus="du -sh" \
 	dfa="df -h" \
+	gotop="gotop -c monokai" \

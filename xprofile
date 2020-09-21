@@ -14,4 +14,4 @@ setbg &			# set the background with the `setbg` script
 xcompmgr &		# xcompmgr for transparency
 dunst &			# dunst for notifications
 unclutter &		# Remove mouse when idle
-xset r rate 200 100 &	# Speed xrate up
+xset r rate 200 70 &	# Speed xrate up

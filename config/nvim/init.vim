@@ -1,7 +1,12 @@
+
+" Note: Make sure the function is defined before `vim-buffet` is loaded.
+function! g:BuffetSetCustomColors()
+  hi! BuffetCurrentBuffer cterm=NONE ctermbg=1 ctermfg=4 guibg=#00FF00 guifg=#000000
+endfunction
+
 set nocompatible
 
 let mapleader =" "
-
 if ! filereadable(expand('~/.config/nvim/autoload/plug.vim'))
 	echo "Downloading junegunn/vim-plug to manage plugins..."
 	silent !mkdir -p ~/.config/nvim/autoload/
@@ -21,9 +26,12 @@ Plug 'junegunn/fzf.vim'
 Plug 'chaoren/vim-wordmotion'
 Plug 'mkitt/tabline.vim'
 Plug 'sheerun/vim-polyglot'
+Plug 'easymotion/vim-easymotion'
+Plug 'bagrat/vim-buffet'
 call plug#end()
 
 " Some basics:
+    set bg=dark
     set regexpengine=1
     set mouse=n
     set nohlsearch
@@ -60,11 +68,13 @@ call plug#end()
     nnoremap c "_c
     nnoremap <M-W> :w! <bar> mksession! ~/.config/nvim/Session.vim<CR>
     nnoremap <M-w> :wall<CR>
-    nnoremap <M-]> :vsplit<CR>
+    nnoremap <M-\> :vsplit<CR>
 
+		nnoremap <M-[> :bprev<CR>
+		nnoremap <M-]> :bnext<CR>
     nnoremap <silent> <Leader>+ :exe "vertical resize +30"<CR>
     nnoremap <silent> <Leader>- :exe "vertical resize -30"<CR>
-    let g:NERDTreeWinSize=70
+    let g:NERDTreeWinSize=50
 
     set updatetime=50
     set timeoutlen=1000
@@ -77,16 +87,33 @@ call plug#end()
     set nowrap
 
     " Tab config
-    noremap <M-1> 1gt
-    noremap <M-2> 2gt
-    noremap <M-3> 3gt
-    noremap <M-4> 4gt
-    noremap <M-5> 5gt
-    noremap <M-6> 6gt
-    noremap <M-7> 7gt
-    noremap <M-8> 8gt
-    noremap <M-9> 9gt
-    noremap <M-0> :tablast<cr>
+    " noremap <M-1> 1gt
+    " noremap <M-2> 2gt
+    " noremap <M-3> 3gt
+    " noremap <M-4> 4gt
+    " noremap <M-5> 5gt
+    " noremap <M-6> 6gt
+    " noremap <M-7> 7gt
+    " noremap <M-8> 8gt
+    " noremap <M-9> 9gt
+    " noremap <M-0> :tablast<cr>
+
+		" Vim buffer (Vim Tab Plugin)
+		let g:buffet_show_index=1
+    nmap <M-1> <Plug>BuffetSwitch(1)
+		nmap <M-2> <Plug>BuffetSwitch(2)
+		nmap <M-3> <Plug>BuffetSwitch(3)
+		nmap <M-4> <Plug>BuffetSwitch(4)
+		nmap <M-5> <Plug>BuffetSwitch(5)
+		nmap <M-6> <Plug>BuffetSwitch(6)
+		nmap <M-7> <Plug>BuffetSwitch(7)
+		nmap <M-8> <Plug>BuffetSwitch(8)
+		nmap <M-9> <Plug>BuffetSwitch(9)
+		nmap <M-0> <Plug>BuffetSwitch(10)
+		nmap <leader>z :Bw<CR>
+		nmap <leader>Z :Bonly<CR>
+		nmap <C-PageUp> :bp<CR>
+		nmap <C-PageDown> :bn<CR>
 
     set hidden
     set backspace=indent,eol,start " allow backspacing over everything in insert mode
@@ -104,33 +131,36 @@ call plug#end()
     " Don't pass messages to |ins-completion-menu|.
     set shortmess+=c
 
-" Vim surround
-" use block words `S + -- ' | " | ( | [ | { --`
-" Triger `autoread` when files changes on disk
-" https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
-" https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
+		" Vim surround
+		" use block words `S + -- ' | " | ( | [ | { --`
+		" Triger `autoread` when files changes on disk
+		" https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
+		" https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
     autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
 
-" Notification after file change
-" https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
+		" Notification after file change
+		" https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
     autocmd FileChangedShellPost *
       \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 
-" fzf plugin
-	nnoremap <M-p> :GFiles<CR>
-    function! s:copy_results(lines)
-        let joined_lines = join(a:lines, "\n")
-        if len(a:lines) > 1
-            let joined_lines .= "\n"
-        endif
-        let @+ = joined_lines
-    endfunction
-    let g:fzf_action = {
-                \ 'ctrl-t': 'tab split',
-                \ 'ctrl-x': 'split',
-                \ 'ctrl-v': 'vsplit',
-                \ 'ctrl-o': function('s:copy_results'),
-                \ }
+		" fzf plugin
+		let $FZF_DEFAULT_COMMAND = 'ag -g ""'
+		nnoremap <M-P> :Ag<CR>
+		" nnoremap <M-p> :GFiles --exclude-standard --cached --others<CR>
+		nnoremap <M-p> :Files<CR>
+			function! s:copy_results(lines)
+					let joined_lines = join(a:lines, "\n")
+					if len(a:lines) > 1
+							let joined_lines .= "\n"
+					endif
+					let @+ = joined_lines
+			endfunction
+			let g:fzf_action = {
+									\ 'ctrl-t': 'tab split',
+									\ 'ctrl-s': 'split',
+									\ 'ctrl-v': 'vsplit',
+									\ 'ctrl-o': function('s:copy_results'),
+									\ }
 
 " Enable autocompletion:
 	set wildmode=longest,list,full
@@ -143,22 +173,9 @@ call plug#end()
 
 " Nerd tree
   let g:NERDTreeWinPos = "right"
-  function MyNerdToggle()
-      if &filetype == 'nerdtree'
-          :NERDTreeToggle
-      else
-          :NERDTreeFind
-      endif
-  endfunction
 
   " Start nvim with 'nvim .'
-  nnoremap <M-n> :call MyNerdToggle()<CR>
-	autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-    if has('nvim')
-        let NERDTreeBookmarksFile = stdpath('data') . '/NERDTreeBookmarks'
-    else
-        let NERDTreeBookmarksFile = '~/.vim' . '/NERDTreeBookmarks'
-    endif
+  nnoremap <M-n> :NERDTreeToggle<CR>
 
 " Shortcutting split navigation, saving a keypress:
 	map <C-h> <C-w>h
@@ -189,8 +206,8 @@ call plug#end()
 	autocmd BufWritePost *Xresources,*Xdefaults !xrdb %
 
 " Navigating with guides
-	vnoremap <leader><leader> <Esc>/<++><Enter>"_c4l
-	map <leader><leader> <Esc>/<++><Enter>"_c4l
+	" vnoremap <leader><leader> <Esc>/<++><Enter>"_c4l
+	" map <leader><leader> <Esc>/<++><Enter>"_c4l
 
 " Save file as sudo on files that require root permission
 	cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
@@ -202,3 +219,15 @@ if &diff
     highlight! link DiffText MatchParen
 endif
 
+" Easymotion
+let g:EasyMotion_do_mapping = 0 " Disable default mappings
+
+" Jump to anywhere you want with minimal keystrokes, with just one key binding.
+" `s{char}{label}`
+nmap <Leader><Leader>s <Plug>(easymotion-overwin-f2)
+nmap <Leader><Leader>/ <Plug>(easymotion-sn)
+nmap <Leader>j <Plug>(easymotion-j)
+nmap <Leader>k <Plug>(easymotion-k)
+
+" Turn on case-insensitive feature
+let g:EasyMotion_smartcase = 1

@@ -41,6 +41,7 @@ gis="git status" \
 gif="git diff" \
 gid="git add ." \
 gic="git commit -m " \
+gck="git checkout " \
 gip="git push" \
 gil="git logg" \
 las="ls -s" \
