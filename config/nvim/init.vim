@@ -28,10 +28,15 @@ Plug 'mkitt/tabline.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'easymotion/vim-easymotion'
 Plug 'bagrat/vim-buffet'
+Plug 'NLKNguyen/papercolor-theme'
 call plug#end()
 
 " Some basics:
-    set bg=dark
+
+    " set bg=dark
+    set background=dark
+		colorscheme PaperColor
+
     set regexpengine=1
     set mouse=n
     set nohlsearch
@@ -74,7 +79,9 @@ call plug#end()
 		nnoremap <M-]> :bnext<CR>
     nnoremap <silent> <Leader>+ :exe "vertical resize +30"<CR>
     nnoremap <silent> <Leader>- :exe "vertical resize -30"<CR>
+
     let g:NERDTreeWinSize=50
+		nnoremap <M-n> :NERDTreeToggle<CR>
 
     set updatetime=50
     set timeoutlen=1000
@@ -171,11 +178,6 @@ call plug#end()
 " Splits open at the bottom and right, which is non-retarded, unlike vim defaults.
 	set splitbelow splitright
 
-" Nerd tree
-  let g:NERDTreeWinPos = "right"
-
-  " Start nvim with 'nvim .'
-  nnoremap <M-n> :NERDTreeToggle<CR>
 
 " Shortcutting split navigation, saving a keypress:
 	map <C-h> <C-w>h
