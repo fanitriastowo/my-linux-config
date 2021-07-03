@@ -1,4 +1,3 @@
-
 " Note: Make sure the function is defined before `vim-buffet` is loaded.
 function! g:BuffetSetCustomColors()
   hi! BuffetCurrentBuffer cterm=NONE ctermbg=1 ctermfg=4 guibg=#00FF00 guifg=#000000
@@ -6,7 +5,7 @@ endfunction
 
 set nocompatible
 
-let mapleader=" "
+let mapleader =" "
 if ! filereadable(expand('~/.config/nvim/autoload/plug.vim'))
 	echo "Downloading junegunn/vim-plug to manage plugins..."
 	silent !mkdir -p ~/.config/nvim/autoload/
@@ -28,7 +27,7 @@ Plug 'mkitt/tabline.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'easymotion/vim-easymotion'
 Plug 'bagrat/vim-buffet'
-Plug 'maxboisvert/vim-simple-complete'
+" Plug 'maxboisvert/vim-simple-complete'
 
 " vscode like plugin START COC
 " Plug 'pangloss/vim-javascript'
@@ -36,7 +35,7 @@ Plug 'maxboisvert/vim-simple-complete'
 " Plug 'peitalin/vim-jsx-typescript'
 " Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 " Plug 'jparise/vim-graphql'
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " vscode like plugin ENDING
 
 call plug#end()
@@ -273,11 +272,28 @@ nmap <silent> <Leader>d <Plug>(coc-definition)
 nmap <silent> <Leader>t <Plug>(coc-type-definition)
 nmap <silent> <Leader>r <Plug>(coc-references)
 nmap <silent> <Leader>i <Plug>(coc-implementation)
-
 nmap <silent> <Leader>[ <Plug>(coc-diagnostic-prev)
 nmap <silent> <Leader>] <Plug>(coc-diagnostic-next)
+nmap <silent> <leader>f <Plug>(coc-fix-current)
 
+inoremap <silent><expr> <c-space> coc#refresh()
 nnoremap <silent> <Leader><Leader>d :<C-u>CocList diagnostics<cr>
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
 
 hi! CocErrorSign guifg=#d1666a
 hi! CocInfoSign guibg=#353b45
@@ -290,4 +306,6 @@ endif
 if isdirectory('./node_modules') && isdirectory('./node_modules/eslint')
   let g:coc_global_extensions += ['coc-eslint']
 endif
+
 " vscode like plugin ENDING
+
