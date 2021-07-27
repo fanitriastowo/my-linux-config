@@ -1,3 +1,4 @@
+
 " Note: Make sure the function is defined before `vim-buffet` is loaded.
 function! g:BuffetSetCustomColors()
   hi! BuffetCurrentBuffer cterm=NONE ctermbg=1 ctermfg=4 guibg=#00FF00 guifg=#000000
@@ -27,6 +28,7 @@ Plug 'mkitt/tabline.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'easymotion/vim-easymotion'
 Plug 'bagrat/vim-buffet'
+Plug 'morhetz/gruvbox'
 " Plug 'maxboisvert/vim-simple-complete'
 
 " vscode like plugin START COC
@@ -43,7 +45,8 @@ call plug#end()
 " Some basics:
 
     set bg=dark
-    colorscheme torte
+    " colorscheme torte
+    autocmd vimenter * ++nested colorscheme gruvbox
     " set regexpengine=1
     set re=0
 
@@ -88,11 +91,21 @@ call plug#end()
     nnoremap <silent> <Leader>- :exe "vertical resize -30"<CR>
 
     let g:NERDTreeWinSize=50
+    let g:NERDTreeWinPos = "right"
 		nnoremap <M-n> :NERDTreeToggle<CR>
 
     set updatetime=50
     set timeoutlen=1000
     set ttimeoutlen=0
+
+    " inoremap " ""<left>
+    " inoremap ' ''<left>
+    " inoremap ` ``<left>
+    " inoremap ( ()<left>
+    " inoremap [ []<left>
+    " inoremap { {}<left>
+    " inoremap {<CR> {<CR>}<ESC>O
+    " inoremap {;<CR> {<CR>};<ESC>O
 
     set nocursorcolumn
     set nocursorline
@@ -308,4 +321,3 @@ if isdirectory('./node_modules') && isdirectory('./node_modules/eslint')
 endif
 
 " vscode like plugin ENDING
-

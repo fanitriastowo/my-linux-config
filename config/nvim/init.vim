@@ -29,22 +29,14 @@ Plug 'sheerun/vim-polyglot'
 Plug 'easymotion/vim-easymotion'
 Plug 'bagrat/vim-buffet'
 Plug 'maxboisvert/vim-simple-complete'
-
-" vscode like plugin START COC
-" Plug 'pangloss/vim-javascript'
-" Plug 'leafgarland/typescript-vim'
-" Plug 'peitalin/vim-jsx-typescript'
-" Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
-" Plug 'jparise/vim-graphql'
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" vscode like plugin ENDING
-
+Plug 'morhetz/gruvbox'
 call plug#end()
 
 " Some basics:
 
     set bg=dark
-    colorscheme torte
+    " colorscheme torte
+    autocmd vimenter * ++nested colorscheme gruvbox
     " set regexpengine=1
     set re=0
 
@@ -89,11 +81,21 @@ call plug#end()
     nnoremap <silent> <Leader>- :exe "vertical resize -30"<CR>
 
     let g:NERDTreeWinSize=50
+    let g:NERDTreeWinPos = "right"
 		nnoremap <M-n> :NERDTreeToggle<CR>
 
     set updatetime=50
     set timeoutlen=1000
     set ttimeoutlen=0
+
+    " inoremap " ""<left>
+    " inoremap ' ''<left>
+    " inoremap ` ``<left>
+    " inoremap ( ()<left>
+    " inoremap [ []<left>
+    " inoremap { {}<left>
+    " inoremap {<CR> {<CR>}<ESC>O
+    " inoremap {;<CR> {<CR>};<ESC>O
 
     set nocursorcolumn
     set nocursorline
@@ -259,35 +261,3 @@ nmap <Leader>k <Plug>(easymotion-k)
 let g:EasyMotion_smartcase = 1
 
 let g:yats_host_keyword = 1
-
-
-" vscode like plugin START
-" autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
-" autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
-
-let g:coc_global_extensions = [
-  \ 'coc-tsserver'
-  \ ]
-
-nmap <silent> <Leader>d <Plug>(coc-definition)
-nmap <silent> <Leader>t <Plug>(coc-type-definition)
-nmap <silent> <Leader>r <Plug>(coc-references)
-nmap <silent> <Leader>i <Plug>(coc-implementation)
-
-nmap <silent> <Leader>[ <Plug>(coc-diagnostic-prev)
-nmap <silent> <Leader>] <Plug>(coc-diagnostic-next)
-
-nnoremap <silent> <Leader><Leader>d :<C-u>CocList diagnostics<cr>
-
-hi! CocErrorSign guifg=#d1666a
-hi! CocInfoSign guibg=#353b45
-hi! CocWarningSign guifg=#d1cd66
-
-if isdirectory('./node_modules') && isdirectory('./node_modules/prettier')
-  let g:coc_global_extensions += ['coc-prettier']
-endif
-
-if isdirectory('./node_modules') && isdirectory('./node_modules/eslint')
-  let g:coc_global_extensions += ['coc-eslint']
-endif
-" vscode like plugin ENDING
