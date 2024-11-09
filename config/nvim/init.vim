@@ -1,4 +1,3 @@
-
 " Note: Make sure the function is defined before `vim-buffet` is loaded.
 function! g:BuffetSetCustomColors()
   hi! BuffetCurrentBuffer cterm=NONE ctermbg=1 ctermfg=4 guibg=#00FF00 guifg=#000000
@@ -29,18 +28,20 @@ Plug 'sheerun/vim-polyglot'
 Plug 'easymotion/vim-easymotion'
 Plug 'bagrat/vim-buffet'
 Plug 'maxboisvert/vim-simple-complete'
-Plug 'morhetz/gruvbox'
+" Plug 'morhetz/gruvbox'
+Plug 'rakr/vim-one'
 call plug#end()
 
-" Some basics:
-
+    " Some basics:
+    let g:airline_theme='one'
     set bg=dark
-    " colorscheme torte
-    autocmd vimenter * ++nested colorscheme gruvbox
+    colorscheme one
+
+    " autocmd vimenter * ++nested colorscheme gruvbox
     " set regexpengine=1
     set re=0
 
-    set mouse=n
+    set mouse-=a
     set nohlsearch
 
     set clipboard=unnamedplus
@@ -64,7 +65,6 @@ call plug#end()
     set softtabstop=0 expandtab
     set shiftwidth=2
     set smarttab
-    set number
     set ignorecase
     set autoread
     set autoindent
@@ -74,68 +74,50 @@ call plug#end()
 
     nnoremap c "_c
     nnoremap <M-W> :w! <bar> mksession! ~/.config/nvim/Session.vim<CR>
-    nnoremap <M-w> :wall<CR>
-    nnoremap <M-\> :split<CR>
+    nnoremap <Leader>w :wall<CR>
+    nnoremap <Leader>\ :split<CR>
 
     nnoremap <silent> <Leader>+ :exe "vertical resize +30"<CR>
     nnoremap <silent> <Leader>- :exe "vertical resize -30"<CR>
 
     let g:NERDTreeWinSize=50
     let g:NERDTreeWinPos = "right"
-		nnoremap <M-n> :NERDTreeToggle<CR>
+		nnoremap <Leader>n :NERDTreeToggle<CR>
 
     set updatetime=50
     set timeoutlen=1000
     set ttimeoutlen=0
 
-    " inoremap " ""<left>
-    " inoremap ' ''<left>
-    " inoremap ` ``<left>
-    " inoremap ( ()<left>
-    " inoremap [ []<left>
-    " inoremap { {}<left>
-    " inoremap {<CR> {<CR>}<ESC>O
-    " inoremap {;<CR> {<CR>};<ESC>O
-
     set nocursorcolumn
     set nocursorline
     set norelativenumber
+    set colorcolumn=120
     syntax sync minlines=256
-    set nowrap
 
-    " Tab config
-    " noremap <M-1> 1gt
-    " noremap <M-2> 2gt
-    " noremap <M-3> 3gt
-    " noremap <M-4> 4gt
-    " noremap <M-5> 5gt
-    " noremap <M-6> 6gt
-    " noremap <M-7> 7gt
-    " noremap <M-8> 8gt
-    " noremap <M-9> 9gt
-    " noremap <M-0> :tablast<cr>
+    set number
+    set textwidth=120
+    " set columns=120
+    set wrapmargin=0
+    set formatoptions+=t
+    set linebreak
 
 		" Vim buffer (Vim Tab Plugin)
 		let g:buffet_show_index=1
-    nmap <M-1> <Plug>BuffetSwitch(1)
-		nmap <M-2> <Plug>BuffetSwitch(2)
-		nmap <M-3> <Plug>BuffetSwitch(3)
-		nmap <M-4> <Plug>BuffetSwitch(4)
-		nmap <M-5> <Plug>BuffetSwitch(5)
-		nmap <M-6> <Plug>BuffetSwitch(6)
-		nmap <M-7> <Plug>BuffetSwitch(7)
-		nmap <M-8> <Plug>BuffetSwitch(8)
-		nmap <M-9> <Plug>BuffetSwitch(9)
-		nmap <M-0> <Plug>BuffetSwitch(10)
+    nmap <Leader>1 <Plug>BuffetSwitch(1)
+		nmap <Leader>2 <Plug>BuffetSwitch(2)
+		nmap <Leader>3 <Plug>BuffetSwitch(3)
+		nmap <Leader>4 <Plug>BuffetSwitch(4)
+		nmap <Leader>5 <Plug>BuffetSwitch(5)
+		nmap <Leader>6 <Plug>BuffetSwitch(6)
+		nmap <Leader>7 <Plug>BuffetSwitch(7)
+		nmap <Leader>8 <Plug>BuffetSwitch(8)
+		nmap <Leader>9 <Plug>BuffetSwitch(9)
+		nmap <Leader>0 <Plug>BuffetSwitch(10)
 		nmap <leader>z :Bw<CR>
 		nmap <leader>Z :Bonly<CR>
-		" nmap <C-PageUp> :bp<CR>
-		" nmap <C-PageDown> :bn<CR>
-		nnoremap <M-[> :bp<CR>
-		nnoremap <M-]> :bn<CR>
+		nnoremap <Leader>[ :bp<CR>
+		nnoremap <Leader>] :bn<CR>
 
-		" Format using prettier NPM package
-    nnoremap <silent> <Leader>= :!prettier --single-quote --trailing-comma all --no-semi --jsx-single-quote --write %<CR>
     nnoremap <silent> <Leader>+ :exe "vertical resize +30"<CR>
 
     set hidden
@@ -168,22 +150,23 @@ call plug#end()
 
 		" fzf plugin
 		let $FZF_DEFAULT_COMMAND = 'ag -g ""'
-		nnoremap <M-P> :Ag<CR>
-		" nnoremap <M-p> :GFiles --exclude-standard --cached --others<CR>
-		nnoremap <M-p> :Files<CR>
-			function! s:copy_results(lines)
-					let joined_lines = join(a:lines, "\n")
-					if len(a:lines) > 1
-							let joined_lines .= "\n"
-					endif
-					let @+ = joined_lines
-			endfunction
-			let g:fzf_action = {
-									\ 'ctrl-t': 'tab split',
-									\ 'ctrl-s': 'split',
-									\ 'ctrl-v': 'vsplit',
-									\ 'ctrl-o': function('s:copy_results'),
-									\ }
+		nnoremap <Leader>P :Ag<CR>
+		nnoremap <Leader>p :GFiles --exclude-standard --cached --others<CR>
+		" nnoremap <Leader>p :Files<CR>
+
+    function! s:copy_results(lines)
+        let joined_lines = join(a:lines, "\n")
+        if len(a:lines) > 1
+            let joined_lines .= "\n"
+        endif
+        let @+ = joined_lines
+    endfunction
+    let g:fzf_action = {
+                \ 'ctrl-t': 'tab split',
+                \ 'ctrl-s': 'split',
+                \ 'ctrl-v': 'vsplit',
+                \ 'ctrl-o': function('s:copy_results'),
+                \ }
 
 " Enable autocompletion:
 	set wildmode=longest,list,full
@@ -213,15 +196,6 @@ call plug#end()
 
 " Automatically deletes all trailing whitespace on save.
 	autocmd BufWritePre * %s/\s\+$//e
-
-" When shortcut files are updated, renew bash and vifm configs with new material:
-	autocmd BufWritePost ~/.config/bmdirs,~/.config/bmfiles !shortcuts
-
-" Update binds when sxhkdrc is updated.
-	autocmd BufWritePost *sxhkdrc !pkill -USR1 sxhkd
-
-" Run xrdb whenever Xdefaults or Xresources are updated.
-	autocmd BufWritePost *Xresources,*Xdefaults !xrdb %
 
 " == AUTOCMD ================================
 " by default .ts file are not identified as typescript and .tsx files are not
@@ -256,8 +230,9 @@ nmap <Leader><Leader>/ <Plug>(easymotion-sn)
 nmap <Leader>j <Plug>(easymotion-j)
 nmap <Leader>k <Plug>(easymotion-k)
 
-
 " Turn on case-insensitive feature
 let g:EasyMotion_smartcase = 1
 
 let g:yats_host_keyword = 1
+
+set rtp+=/opt/homebrew/opt/fzf
